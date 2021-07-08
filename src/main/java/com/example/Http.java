@@ -13,6 +13,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * Fetches the response body and headers for the Star-Wars-API HTTP GET request
@@ -85,7 +89,8 @@ public class Http {
      * @return response body
      */
     private String getResponse(HttpURLConnection conn, boolean header) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb_header = new StringBuilder();
+        StringBuilder sb_body = new StringBuilder();
 
         // Reader to hold the response body inputStream or errorStream
         Reader streamReader = null;
@@ -109,7 +114,7 @@ public class Http {
                 for (String key : headers) {
                     // the key is null in exactly one case
                     if (key != null) {
-                        sb.append(key + " = ");
+                        sb_header.append(key + " = ");
                     }
 
                     // get the value of every key
@@ -119,18 +124,18 @@ public class Http {
                     Iterator<String> itr = headerValues.iterator();
 
                     while (itr.hasNext()) {
-                        sb.append(itr.next());
+                        sb_header.append(itr.next());
 
                         if (itr.hasNext()) {
-                            sb.append(",");
+                            sb_header.append(",");
                         }
                     }
 
-                    sb.append(String.format("%n"));
+                    sb_header.append(String.format("%n"));
                 }
 
                 // for extra line of separation between response header and body
-                sb.append(String.format("%n"));
+                sb_header.append(String.format("%n"));
             }
             // --------------------------------------------------------------------------------
 
@@ -151,10 +156,19 @@ public class Http {
 
             // read till null is not encountered
             while ((currentLine = br.readLine()) != null) {
-                sb.append(currentLine);
+                sb_body.append(currentLine);
             }
 
             br.close();
+            // --------------------------------------------------------------------------------
+
+            // step 5 (optional): pretty print the response body using Gson
+            // --------------------------------------------------------------------------------
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+            JsonElement je = JsonParser.parseString(sb_body.toString());
+            sb_body = new StringBuilder(gson.toJson(je));
             // --------------------------------------------------------------------------------
         }
 
@@ -172,6 +186,6 @@ public class Http {
             e.printStackTrace();
         }
 
-        return sb.toString();
+        return (sb_header.toString() + sb_body.toString());
     }
 }
