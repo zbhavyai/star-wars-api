@@ -65,9 +65,6 @@ public class Http {
             conn.setRequestProperty("Content-Type", "application/json");
 
             response = this.getResponse(conn, header);
-
-            // writing the response to a file - for testing
-            ToFile.write("out.json", response, false);
         }
 
         // thrown by setRequestMethod
@@ -165,7 +162,7 @@ public class Http {
             // step 5 (optional): pretty print the response body using Gson
             // --------------------------------------------------------------------------------
             GsonBuilder builder = new GsonBuilder();
-            builder.setPrettyPrinting();
+            builder.setPrettyPrinting().disableHtmlEscaping();
             Gson gson = builder.create();
             JsonElement je = JsonParser.parseString(sb_body.toString());
             sb_body = new StringBuilder(gson.toJson(je));
