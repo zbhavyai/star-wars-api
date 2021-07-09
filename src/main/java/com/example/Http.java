@@ -20,6 +20,10 @@ import com.google.gson.JsonParser;
 
 /**
  * Fetches the response body and headers for the Star-Wars-API HTTP GET request
+ *
+ * @author Bhavyai Gupta
+ * @version 1.0.0
+ * @since July 7, 2021
  */
 public class Http {
     private URL urlquery;
