@@ -236,7 +236,7 @@ public class Printer {
      *                   <code>false</code> for only basic details
      */
     public void planet(JsonObject jsonObject, boolean verbosity) {
-        int padding = 14;
+        int padding = 15;
 
         if (verbosity == false) {
             System.out.printf("%s", jsonObject.get("name").getAsString());
